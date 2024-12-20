@@ -3,13 +3,12 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"path/filepath"
 	"strings"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 var db *sql.DB
@@ -31,7 +30,7 @@ func main() {
 
 	http.HandleFunc("/api/signup", handleSignup)
 	http.HandleFunc("/api/login", handleLogin)
-	http.HandleFunc("/api/home", handleHome)
+	http.HandleFunc("/home", handleHome)
 	http.HandleFunc("/", serveReactApp)
 
 	log.Println("Server started at http://localhost:8080")
@@ -82,7 +81,7 @@ func handleSignup(w http.ResponseWriter, r *http.Request) {
 		}
 
 		w.WriteHeader(http.StatusCreated)
-		fmt.Fprintf(w, "Signup successful")
+		json.NewEncoder(w).Encode(map[string]string{"message": "Signup successful"})
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
@@ -100,30 +99,35 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		var dbPassword string
-		err = db.QueryRow("SELECT password FROM users WHERE email = ?", user.Email).Scan(&dbPassword)
+		var hashedPassword string
+		err = db.QueryRow("SELECT password_hash FROM users WHERE email = ?", user.Email).Scan(&hashedPassword)
 		if err != nil {
 			if err == sql.ErrNoRows {
-				http.Error(w, "User not found", http.StatusUnauthorized)
+				w.WriteHeader(http.StatusUnauthorized)
+				json.NewEncoder(w).Encode(map[string]string{"message": "User not found"})
 			} else {
-				http.Error(w, "Failed to query user", http.StatusInternalServerError)
+				log.Printf("Failed to query user: %v", err)
+				w.WriteHeader(http.StatusInternalServerError)
+				json.NewEncoder(w).Encode(map[string]string{"message": "Failed to query user"})
 			}
 			return
 		}
-		if user.Password != dbPassword {
-			http.Error(w, "Invalid password", http.StatusUnauthorized)
+
+		if err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(user.Password)); err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(map[string]string{"message": "Invalid password"})
 			return
 		}
+
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "Login successful")
-		http.Redirect(w, r, "/home", http.StatusSeeOther)
+		json.NewEncoder(w).Encode(map[string]string{"message": "Login successful"})
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}
 }
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./index.html")
+	http.ServeFile(w, r, "./static/home.html")
 }
 
 func serveReactApp(w http.ResponseWriter, r *http.Request) {

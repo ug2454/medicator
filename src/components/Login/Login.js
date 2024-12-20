@@ -17,6 +17,32 @@ function Login() {
         }));
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log('Form Data:', formData);
+        try {
+            const response = await fetch('http://localhost:8080/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                console.log('Login successful');
+                localStorage.setItem('isAuthenticated', 'true'); // Set authentication flag
+                navigate('/home');
+            } else {
+                const errorData = await response.json();
+                console.error('Login failed:', errorData.message);
+            }
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
+
+    }
+
     const handleSignupClick = () => {
         navigate('/signup');
     };
@@ -30,7 +56,7 @@ function Login() {
             </div>
             <div className="login-container">
                 <h1>Login</h1>
-                <form action="http://localhost:8080/api/login" method="POST">
+                <form onSubmit={handleSubmit}>
                     <label htmlFor="email">Email:</label>
                     <input
                         type="text"
@@ -49,11 +75,9 @@ function Login() {
                         id="password"
                         name="password"
                         placeholder="Enter Password"
-                        value={formData.password}
                         onChange={handleChange}
                         required
                     />
-                    <br />
                     <button type="submit">Login</button>
                     <br />
                     <button type="button" onClick={handleSignupClick}>Sign Up</button>
