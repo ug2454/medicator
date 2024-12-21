@@ -22,6 +22,7 @@ func main() {
 	}
 
 	db, err = sql.Open("mysql", config.DBUsername+":"+config.DBPassword+"@tcp(127.0.0.1:3306)/medicator")
+
 	if err != nil {
 		log.Fatal(err)
 	}
