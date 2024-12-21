@@ -32,7 +32,7 @@ function Login() {
             if (response.ok) {
                 console.log('Login successful');
                 localStorage.setItem('isAuthenticated', 'true'); // Set authentication flag
-                navigate('/home');
+                navigate('/home', { replace: true }); // Replace the current entry in the history stack
             } else {
                 const errorData = await response.json();
                 console.error('Login failed:', errorData.message);

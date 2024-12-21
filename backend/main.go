@@ -9,13 +9,19 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"os"
 )
 
 var db *sql.DB
 
 func main() {
 	var err error
-	db, err = sql.Open("mysql", "admin:garlicjunior@tcp(127.0.0.1:3306)/medicator")
+	config, err := loadConfig("config.json")
+	if err != nil {
+		log.Fatalf("Failed to load config: %v", err)
+	}
+
+	db, err = sql.Open("mysql", config.DBUsername+":"+config.DBPassword+"@tcp(127.0.0.1:3306)/medicator")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,6 +44,27 @@ func main() {
 	if err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
+}
+type Config struct {
+	DBUsername string `json:"dbUsername"`
+	DBPassword string `json:"dbPassword"`
+}
+
+func loadConfig(filename string) (*Config, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var config Config
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&config)
+	if err != nil {
+		return nil, err
+	}
+
+	return &config, nil
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
