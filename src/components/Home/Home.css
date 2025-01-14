@@ -18,7 +18,7 @@ body {
   background-color: #4caf50;
   /* Green background */
   color: white;
-  padding: 10px 20px;
+  padding: 20px 20px;
   width: 100vw;
 }
 
@@ -173,14 +173,7 @@ body {
   border-radius: 4px;
 }
 
-button {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+
 
 button:hover {
   background-color: #45a049;

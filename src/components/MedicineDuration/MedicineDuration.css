@@ -1,0 +1,136 @@
+.medicine-duration {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center align the content horizontally */
+    height: 100vh;
+    background-color: #000;
+    padding: 20px;
+}
+
+.medicine-duration h1 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.table-container-wrapper {
+    display: flex;
+    justify-content: space-around;
+    /* Space out the two tables horizontally */
+    align-items: flex-start;
+    /* Align tables to the top */
+    width: 100%;
+    /* Full width for proper spacing */
+}
+
+.table-container1 {
+    flex: 1;
+    /* Make both containers take equal width */
+    margin: 0 10px;
+    /* Add spacing between tables */
+    width: 50%;
+    /* Full width for proper spacing */
+}
+
+.table-container2 {
+    flex: 1;
+    /* Make both containers take equal width */
+    /* margin: 0 10px; */
+    /* Add spacing between tables */
+    width: 50%;
+    /* Full width for proper spacing */
+    margin-top: 40px;
+}
+
+.table-container1 th {
+    background-color: #4CAF50;
+    /* Example color: Tomato */
+}
+
+.table-container2 th {
+    background-color: #95d697;
+    /* Example color: Tomato */
+}
+
+.table-container1 td {
+    background-color: #2c2c2c;
+}
+
+.table-container2 td {
+    background-color: #6a6969;
+}
+
+
+
+.medicine-duration table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    width: 100%;
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+    background-color: #333;
+    /* Optional: Add background for better visibility */
+    color: #fff;
+}
+
+.table-wrapper {
+    max-height: 400px;
+    /* Adjust the height as needed */
+    overflow-y: auto;
+}
+
+.medicine-duration th,
+.medicine-duration td {
+    padding: 20px;
+    width: 25%;
+    text-align: left;
+    text-align: center;
+
+}
+
+.medicine-duration th {
+    position: sticky;
+    top: 0;
+    background-color: #4CAF50;
+    /* Ensure the header background color is set */
+    z-index: 1;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.medicine-duration tr {
+    border-bottom: 1px solid #ddd;
+}
+
+
+.medicine-duration th {
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+
+
+.medicine-duration td:first-child {
+    font-weight: bold;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: #fff;
+    margin-top: 40px;
+    width: 100%;
+}
+
+.medicine-duration tbody tr:hover {
+    background-color: purple !important; /* Ensure the hover takes precedence */
+}
+
+.medicine-duration tbody td {
+    background-color: transparent; /* Ensure no background color overrides the hover effect */
+}

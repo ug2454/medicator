@@ -1,0 +1,42 @@
+.log-bp-container {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  
+  .log-bp-container h2 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .log-bp-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .log-bp-container label {
+    margin-right: 10px;
+    color: #fff;
+  }
+  
+  .log-bp-container input,
+  .log-bp-container select {
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .log-bp-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .log-bp-container button:hover {
+    background-color: #45a049;
+  }
+  

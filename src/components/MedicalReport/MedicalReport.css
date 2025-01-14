@@ -1,0 +1,97 @@
+/* General Styling */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000; /* Black background */
+    color: white; /* White text for contrast */
+    box-sizing: border-box;
+}
+
+/* Main Container */
+.main-div {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto; /* Center the form on the page */
+    padding: 20px;
+    background-color: #4caf50; /* Green background for the form */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Add spacing between form fields */
+}
+
+/* Labels */
+form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Inputs and Textareas */
+form input[type="text"],
+form input[type="date"],
+form textarea {
+    width: 100%; /* Make inputs responsive */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+/* Textarea Styling */
+form textarea {
+    resize: vertical; /* Allow resizing vertically only */
+    min-height: 80px;
+}
+
+/* Submit Button */
+.medicalReportSubmitButton {
+    background-color: #4caf50;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+    width: 20%;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Heading */
+.main-div h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-div {
+        padding: 15px;
+    }
+
+    form input[type="text"],
+    form input[type="date"],
+    form textarea {
+        font-size: 0.9rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+}

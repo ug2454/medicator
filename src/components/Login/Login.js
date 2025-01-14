@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 function Login() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -21,7 +22,9 @@ function Login() {
         e.preventDefault();
         console.log('Form Data:', formData);
         try {
-            const response = await fetch('http://localhost:8080/api/login', {
+            console.log("API Base URL:", process.env.REACT_APP_API_BASE_URL);
+
+            const response = await fetch(`${API_BASE_URL}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -30,8 +33,12 @@ function Login() {
             });
 
             if (response.ok) {
+                const data = await response.json();
                 console.log('Login successful');
                 localStorage.setItem('isAuthenticated', 'true'); // Set authentication flag
+                localStorage.setItem('username', data.username); // Store username
+                localStorage.setItem('userId', data.userId); // Store userId
+                console.log('username', data.username);
                 navigate('/home', { replace: true }); // Replace the current entry in the history stack
             } else {
                 const errorData = await response.json();
@@ -40,8 +47,7 @@ function Login() {
         } catch (error) {
             console.error('Login failed:', error);
         }
-
-    }
+    };
 
     const handleSignupClick = () => {
         navigate('/signup');
@@ -78,9 +84,9 @@ function Login() {
                         onChange={handleChange}
                         required
                     />
-                    <button type="submit">Login</button>
+                    <button className='loginButton' type="submit">Login</button>
                     <br />
-                    <button type="button" onClick={handleSignupClick}>Sign Up</button>
+                    <button className='signupButton' type="button" onClick={handleSignupClick}>Sign Up</button>
                 </form>
             </div>
         </div>
