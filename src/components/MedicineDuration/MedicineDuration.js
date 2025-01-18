@@ -14,8 +14,8 @@ const MedicineDuration = () => {
                 if (response.ok) {
                     const data = await response.json();
                     const currentDate = new Date().toISOString().split('T')[0];
-                    const active = data.filter(report => report.followUpDate >= currentDate);
-                    const expired = data.filter(report => report.followUpDate < currentDate);
+                    const active = data.filter(report => report.dosage >= currentDate);
+                    const expired = data.filter(report => report.dosage < currentDate);
                     setActiveReports(active);
                     setExpiredReports(expired);
                 } else {
