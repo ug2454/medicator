@@ -1,42 +1,135 @@
 .log-bp-container {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.log-bp-container h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.log-bp-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.log-bp-container label {
+  color: #2c3e50;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.log-bp-container input,
+.log-bp-container select {
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: white;
+  transition: all 0.3s ease;
+  width: 100%;
+  color: #2c3e50;
+}
+
+.log-bp-container input:focus,
+.log-bp-container select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.log-bp-container input:hover,
+.log-bp-container select:hover {
+  border-color: #3498db;
+}
+
+.log-bp-container button {
+  margin-top: 1rem;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.log-bp-container button:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.log-bp-container button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.log-bp-container button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Error states */
+.log-bp-container input.error,
+.log-bp-container select.error {
+  border-color: #e74c3c;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* Success message */
+.success-message {
+  color: #2ecc71;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 1rem;
+  background-color: rgba(46, 204, 113, 0.1);
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .log-bp-container {
+    margin: 1rem;
+    padding: 1.5rem;
   }
-  
+
   .log-bp-container h2 {
-    text-align: center;
-    color: #fff;
-    margin-bottom: 20px;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
   }
-  
-  .log-bp-container form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .log-bp-container label {
-    margin-right: 10px;
-    color: #fff;
-  }
-  
+
   .log-bp-container input,
   .log-bp-container select {
-    margin-bottom: 10px;
-    padding: 8px;
-    font-size: 16px;
+    font-size: 16px; /* Prevents zoom on mobile */
   }
-  
-  .log-bp-container button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .log-bp-container button:hover {
-    background-color: #45a049;
-  }
+}
   

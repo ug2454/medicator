@@ -131,12 +131,13 @@ const MedicalReport = () => {
         </div>
         
         {/* Frequency Selection */}
-        <div className="form-group">
+        <div className="form-group frequency-group">
           <label htmlFor="frequencyType">Frequency</label>
           <select 
             id="frequencyType" 
             value={frequencyType} 
             onChange={(e) => setFrequencyType(e.target.value)}
+            className="frequency-select"
           >
             <option value="daily">Daily</option>
             <option value="weekly">Weekly</option>
@@ -146,12 +147,13 @@ const MedicalReport = () => {
         
         {/* Show day selection if weekly is selected */}
         {frequencyType === 'weekly' && (
-          <div className="form-group">
+          <div className="form-group frequency-group">
             <label htmlFor="weeklyDay">Day of Week</label>
             <select 
               id="weeklyDay" 
               value={weeklyDay} 
               onChange={(e) => setWeeklyDay(e.target.value)}
+              className="frequency-select"
             >
               <option value="monday">Monday</option>
               <option value="tuesday">Tuesday</option>
@@ -180,6 +182,7 @@ const MedicalReport = () => {
               id="durationUnit" 
               value={durationUnit} 
               onChange={(e) => setDurationUnit(e.target.value)}
+              className="frequency-select"
             >
               <option value="weeks">Weeks</option>
               <option value="months">Months</option>

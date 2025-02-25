@@ -1,215 +1,240 @@
 .medicine-duration {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Center align the content horizontally */
-    height: 100vh;
-    background-color: #000;
-    padding: 20px;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    padding: 2rem;
+    color: #2c3e50;
 }
 
 .medicine-duration h1 {
     text-align: center;
-    color: #fff;
-    margin-bottom: 20px;
+    color: #2c3e50;
+    margin-bottom: 2rem;
     font-size: 2rem;
+    font-weight: 600;
 }
 
 .table-container-wrapper {
     display: flex;
-    justify-content: space-around;
-    /* Space out the two tables horizontally */
-    align-items: flex-start;
-    /* Align tables to the top */
+    flex-direction: column;
+    gap: 2rem;
     width: 100%;
-    /* Full width for proper spacing */
+    max-width: 1200px;
 }
 
-.table-container1 {
+@media (min-width: 992px) {
+    .table-container-wrapper {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+}
+
+.table-container1,
+.table-container2 {
     flex: 1;
-    /* Make both containers take equal width */
-    margin: 0 10px;
-    /* Add spacing between tables */
-    width: 50%;
-    /* Full width for proper spacing */
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
 .table-container2 {
-    flex: 1;
-    /* Make both containers take equal width */
-    /* margin: 0 10px; */
-    /* Add spacing between tables */
-    width: 50%;
-    /* Full width for proper spacing */
-    margin-top: 40px;
-}
-
-.table-container1 th {
-    background-color: #4CAF50;
-    /* Example color: Tomato */
-}
-
-.table-container2 th {
-    background-color: #95d697;
-    /* Example color: Tomato */
-}
-
-.table-container1 td {
-    background-color: #2c2c2c;
-}
-
-.table-container2 td {
-    background-color: #6a6969;
-}
-
-
-
-.medicine-duration table {
-    border-collapse: collapse;
-    margin: 0 auto;
-    width: 100%;
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
-    background-color: #333;
-    /* Optional: Add background for better visibility */
-    color: #fff;
+    margin-top: 0;
 }
 
 .table-wrapper {
-    max-height: 400px;
-    /* Adjust the height as needed */
+    max-height: 500px;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #3498db #f1f1f1;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background-color: #3498db;
+    border-radius: 4px;
+}
+
+.medicine-duration table {
+    border-collapse: collapse;
+    width: 100%;
+    color: #2c3e50;
+    background-color: white;
 }
 
 .medicine-duration th,
 .medicine-duration td {
-    padding: 20px;
-    width: 25%;
-    text-align: left;
+    padding: 1rem;
     text-align: center;
-
 }
 
 .medicine-duration th {
     position: sticky;
     top: 0;
-    background-color: #4CAF50;
-    /* Ensure the header background color is set */
     z-index: 1;
     color: white;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.table-container1 th {
+    background-color: #3498db;
+}
+
+.table-container2 th {
+    background-color: #2980b9;
 }
 
 .medicine-duration tr {
-    border-bottom: 1px solid #ddd;
-}
-
-
-.medicine-duration th {
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-
-
-.medicine-duration td:first-child {
-    font-weight: bold;
-}
-
-.footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #333;
-    color: #fff;
-    margin-top: 40px;
-    width: 100%;
+    border-bottom: 1px solid #ecf0f1;
+    transition: background-color 0.2s ease;
 }
 
 .medicine-duration tbody tr:hover {
-    background-color: purple !important; /* Ensure the hover takes precedence */
+    background-color: rgba(52, 152, 219, 0.1) !important;
 }
 
-.medicine-duration tbody td {
-    background-color: transparent; /* Ensure no background color overrides the hover effect */
+.medicine-duration td:first-child {
+    font-weight: 500;
 }
 
 .delete-btn {
-    background-color: #ff4d4d;
+    background-color: #e74c3c;
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
+    border-radius: 6px;
+    padding: 0.5rem 0.8rem;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 .delete-btn:hover {
-    background-color: #531aff;
+    background-color: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 .delete-btn:disabled {
-    background-color: #ffb3b3;
+    background-color: #bdc3c7;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .no-data {
     text-align: center;
-    padding: 20px;
-    color: #666;
+    padding: 2rem;
+    color: #7f8c8d;
     font-style: italic;
-}
-
-/* Make sure the table has an Actions column */
-table th:last-child, 
-table td:last-child {
-    width: 100px;
-    text-align: center;
+    font-size: 1rem;
 }
 
 .table-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ecf0f1;
 }
 
 .bulk-delete-btn {
-    background-color: #ff4d4d;
+    background-color: #e74c3c;
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
+    border-radius: 6px;
+    padding: 0.6rem 1.2rem;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .bulk-delete-btn:hover {
-    background-color: #ff1a1a;
+    background-color: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bulk-delete-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 .bulk-delete-btn:disabled {
-    background-color: #ffb3b3;
+    background-color: #bdc3c7;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 1.2rem;
+    height: 1.2rem;
     cursor: pointer;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: white;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #3498db;
+}
+
+input[type="checkbox"]:checked::after {
+    content: "✓";
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
 }
 
 input[type="checkbox"]:disabled {
     cursor: not-allowed;
     opacity: 0.6;
+    background-color: #ecf0f1;
+    border-color: #bdc3c7;
 }
 
-/* Adjust table column widths */
-table th:first-child, 
-table td:first-child {
-    width: 40px;
+.footer {
     text-align: center;
+    padding: 1.5rem;
+    background-color: white;
+    color: #2c3e50;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

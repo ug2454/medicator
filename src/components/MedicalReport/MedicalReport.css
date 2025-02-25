@@ -1,131 +1,251 @@
 /* General Styling */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #000; /* Black background */
-    color: white; /* White text for contrast */
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f8f9fa;
+    color: #2c3e50;
     box-sizing: border-box;
 }
 
 /* Main Container */
 .main-div {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto; /* Center the form on the page */
-    padding: 20px;
-    background-color: #4caf50; /* Green background for the form */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 20px;
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Form Styling */
 form {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Add spacing between form fields */
+    gap: 1.5rem;
 }
 
 /* Labels */
 form label {
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
     display: block;
+    color: #2c3e50;
+    font-size: 0.95rem;
 }
 
 /* Inputs and Textareas */
 form input[type="text"],
 form input[type="date"],
 form textarea {
-    width: 100%; /* Make inputs responsive */
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
     box-sizing: border-box;
     font-size: 1rem;
+    color: #2c3e50;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="date"]:focus,
+form textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+form input[type="text"]:hover,
+form input[type="date"]:hover,
+form textarea:hover {
+    border-color: #3498db;
 }
 
 /* Textarea Styling */
 form textarea {
-    resize: vertical; /* Allow resizing vertically only */
-    min-height: 80px;
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
+    font-family: inherit;
 }
 
 /* Submit Button */
 .medicalReportSubmitButton {
-    background-color: #4caf50;
+    background-color: #3498db;
     color: white;
     font-size: 1rem;
-    font-weight: bold;
-    padding: 10px;
-    border: 2px solid #fff;
-    border-radius: 4px;
+    font-weight: 600;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
     text-align: center;
     display: block;
-    margin: 0 auto;
-    width: 20%;
+    margin: 1.5rem auto 0;
+    width: auto;
+    min-width: 150px;
+    transition: all 0.3s ease;
 }
 
-button:hover {
-    background-color: #45a049;
+.medicalReportSubmitButton:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.medicalReportSubmitButton:active {
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 /* Heading */
 .main-div h1 {
     text-align: center;
-    margin-bottom: 20px;
-    color: white;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Duration Group */
+.duration-group {
+    margin-bottom: 1.5rem;
+}
+
+.duration-inputs {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.duration-inputs input,
+.duration-inputs select {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #2c3e50;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.duration-inputs input:focus,
+.duration-inputs select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.duration-inputs input:hover,
+.duration-inputs select:hover {
+    border-color: #3498db;
+}
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+/* Success and Error Messages */
+.success-message {
+    color: #2ecc71;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: rgba(46, 204, 113, 0.1);
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.error-message {
+    color: #e74c3c;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: rgba(231, 76, 60, 0.1);
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* Frequency Dropdown Styling */
+.frequency-select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #2c3e50;
+    background-color: white;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+.frequency-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.frequency-select:hover {
+    border-color: #3498db;
+}
+
+.frequency-group {
+    margin-bottom: 1.5rem;
+}
+
+.frequency-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+/* Add styling for select options */
+select option {
+    padding: 0.8rem;
+    font-size: 1rem;
+    color: #2c3e50;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-div {
-        padding: 15px;
+        padding: 1.5rem;
+        margin: 1rem;
+        width: auto;
+    }
+
+    .duration-inputs {
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
     form input[type="text"],
     form input[type="date"],
-    form textarea {
-        font-size: 0.9rem;
+    form textarea,
+    .duration-inputs input,
+    .duration-inputs select {
+        font-size: 16px; /* Prevents zoom on mobile */
     }
 
-    button {
-        font-size: 0.9rem;
-        padding: 8px;
+    .medicalReportSubmitButton {
+        width: 100%;
+        padding: 0.8rem;
     }
-}
-
-/* Add these styles to your existing MedicalReport.css file */
-
-.duration-group {
-  margin-bottom: 15px;
-}
-
-.duration-inputs {
-  display: flex;
-  gap: 10px;
-}
-
-.duration-inputs input {
-  flex: 1;
-}
-
-.duration-inputs select {
-  flex: 1;
-}
-
-select {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #fff;
-  color: #333;
-}
-
-@media (max-width: 768px) {
-  .duration-inputs {
-    flex-direction: column;
-    gap: 5px;
-  }
 }

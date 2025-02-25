@@ -11,6 +11,7 @@ const LogBP = () => {
     const [pulse, setPulse] = useState('');
     const [time, setTime] = useState('');
     const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
 
     const showToast = (message, type = 'error') => {
         const toast = document.createElement('div');
@@ -49,7 +50,8 @@ const LogBP = () => {
             const response = await fetch(`${API_BASE_URL}/api/log-bp`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(bpData)
             });
@@ -57,7 +59,12 @@ const LogBP = () => {
                 const data = await response.json();
                 console.log('BP log successful:', data);
                 showToast('Blood pressure logged successfully!', 'success');
-                // Optionally, clear the form or show a success message
+                
+                // Clear form fields after successful submission
+                setSystolic('');
+                setDiastolic('');
+                setPulse('');
+                setTime('');
             } else {
                 console.error('BP log failed');
                 showToast('Failed to log blood pressure', 'error');
