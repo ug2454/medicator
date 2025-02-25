@@ -95,3 +95,37 @@ button:hover {
         padding: 8px;
     }
 }
+
+/* Add these styles to your existing MedicalReport.css file */
+
+.duration-group {
+  margin-bottom: 15px;
+}
+
+.duration-inputs {
+  display: flex;
+  gap: 10px;
+}
+
+.duration-inputs input {
+  flex: 1;
+}
+
+.duration-inputs select {
+  flex: 1;
+}
+
+select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .duration-inputs {
+    flex-direction: column;
+    gap: 5px;
+  }
+}

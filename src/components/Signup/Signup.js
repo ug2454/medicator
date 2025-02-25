@@ -45,6 +45,7 @@ function Signup() {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Signup successful:', data);
+                localStorage.setItem('token', data.token); // Store JWT
                 localStorage.setItem('isAuthenticated', 'true'); // Set authentication flag
                 localStorage.setItem('username', data.username); // Store username
                 localStorage.setItem('userId', data.userId); // Store userId
@@ -114,7 +115,7 @@ function Signup() {
                     <button className='submit' type="submit">Signup</button>
                     <br />
                     <button className='loginButton' type="submit" onClick={handleLogin}>Login</button>
-                    
+
                 </form>
             </div>
         </div>

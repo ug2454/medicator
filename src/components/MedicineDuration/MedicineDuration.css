@@ -134,3 +134,82 @@
 .medicine-duration tbody td {
     background-color: transparent; /* Ensure no background color overrides the hover effect */
 }
+
+.delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+    background-color: #531aff;
+}
+
+.delete-btn:disabled {
+    background-color: #ffb3b3;
+    cursor: not-allowed;
+}
+
+.no-data {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Make sure the table has an Actions column */
+table th:last-child, 
+table td:last-child {
+    width: 100px;
+    text-align: center;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.bulk-delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.bulk-delete-btn:hover {
+    background-color: #ff1a1a;
+}
+
+.bulk-delete-btn:disabled {
+    background-color: #ffb3b3;
+    cursor: not-allowed;
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Adjust table column widths */
+table th:first-child, 
+table td:first-child {
+    width: 40px;
+    text-align: center;
+}

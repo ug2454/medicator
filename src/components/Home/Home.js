@@ -1,9 +1,9 @@
 import React, {  } from 'react';
 import './Home.css';
-
+import useAuth from '../../useAuth';
 
 function Home() {
-
+  useAuth(); // Use the custom hook to handle token expiration and automatic logout
   
 
 

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import './LogBP.css';
-
+import useAuth from '../../useAuth';
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const LogBP = () => {
+    useAuth(); // Use the custom hook to handle token expiration and automatic logout
+
     const [systolic, setSystolic] = useState('');
     const [diastolic, setDiastolic] = useState('');
     const [pulse, setPulse] = useState('');

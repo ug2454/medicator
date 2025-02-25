@@ -10,6 +10,8 @@ function Login() {
         password: ''
     });
 
+    const [loading, setLoading] = useState(false);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -18,34 +20,58 @@ function Login() {
         }));
     };
 
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form Data:', formData);
+        setLoading(true); // Set loading to true when the login process starts
         try {
-            console.log("API Base URL:", process.env.REACT_APP_API_BASE_URL);
+            console.log("API Base URL=============:", API_BASE_URL);
 
             const response = await fetch(`${API_BASE_URL}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                credentials: 'include'  // This ensures cookies are included
             });
 
             if (response.ok) {
                 const data = await response.json();
                 console.log('Login successful');
-                localStorage.setItem('isAuthenticated', 'true'); // Set authentication flag
-                localStorage.setItem('username', data.username); // Store username
-                localStorage.setItem('userId', data.userId); // Store userId
-                console.log('username', data.username);
-                navigate('/home', { replace: true }); // Replace the current entry in the history stack
+                // Wait for the cookie to be set
+                setTimeout(() => {
+                    // Check if data contains the expected properties
+                    console.log("username, userId, token", data.username, data.userId, data.token);
+                    if (data.username && data.userId) {
+                        localStorage.setItem('isAuthenticated', 'true'); // Set authentication flag
+                        localStorage.setItem('username', data.username); // Store username
+                        localStorage.setItem('userId', data.userId); // Store userId
+                        localStorage.setItem('token', data.token); // Store JWT
+                        console.log('username', data.username);
+                        console.log('TOKEN======', data.token);
+                    } else {
+                        console.warn('Missing username or userId in response data:', data);
+                    }
+                    setLoading(false); // Set loading to false when the login process completes
+                    navigate('/home', { replace: true }); // Replace the current entry in the history stack
+                }, 100); // Adjust the timeout as needed
+
             } else {
-                const errorData = await response.json();
-                console.error('Login failed:', errorData.message);
+                let errData;
+                try {
+                    errData = await response.json();
+                    console.error('Login failed:', errData.message);
+                } catch (err) {
+                    console.error('Login failed. No JSON returned', err);
+                }
+                setLoading(false); // Set loading to false when the login process completes
             }
         } catch (error) {
             console.error('Login failed:', error);
+            setLoading(false); // Set loading to false when the login process completes
         }
     };
 

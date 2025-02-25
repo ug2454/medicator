@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import './BPChart.css';
-
+import useAuth from '../../useAuth';
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const BPChart = () => {
+  // Call useAuth at the top level of your component
+  useAuth();
+  
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
+    console.log('API BASE URL==========', API_BASE_URL);
     const fetchData = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/api/get-bp-data?user_id=${userId}`);

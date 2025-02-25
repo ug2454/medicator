@@ -4,12 +4,14 @@ import './Layout.css';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import useAuth from '../../useAuth';
 
 function Layout() {
   const [isMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [username, setUsername] = useState('');
   const dropdownRef = useRef(null);
+  const { handleLogout } = useAuth();
 
   const navigate = useNavigate();
   const toggleDropdown = () => {
@@ -49,11 +51,6 @@ function Layout() {
     };
   }, [dropdownRef]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated'); // Remove authentication flag
-    localStorage.removeItem('username'); // Remove username
-    window.location.href = '/login'; // Redirect to login page
-  };
 
   return (
     <div className="layout">
