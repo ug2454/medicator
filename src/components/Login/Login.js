@@ -88,31 +88,40 @@ function Login() {
             </div>
             <div className="login-container">
                 <h1>Login</h1>
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="text"
-                        autoComplete="email"
-                        id="email"
-                        name="email"
-                        placeholder="Enter Email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                    <br />
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Enter Password"
-                        onChange={handleChange}
-                        required
-                    />
-                    <button className='loginButton' type="submit">Login</button>
-                    <br />
-                    <button className='signupButton' type="button" onClick={handleSignupClick}>Sign Up</button>
+                <form onSubmit={handleSubmit} className="login-form">
+                    <div className="form-group">
+                        <label htmlFor="email">Email:</label>
+                        <input
+                            type="text"
+                            autoComplete="email"
+                            id="email"
+                            name="email"
+                            className="form-input"
+                            placeholder="Enter Email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            className="form-input"
+                            placeholder="Enter Password"
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="button-container">
+                        <button className='loginButton' type="submit" disabled={loading}>
+                            {loading ? 'Logging in...' : 'Login'}
+                        </button>
+                        <div className="button-separator"></div>
+                        <button className='loginButton' type="button" onClick={handleSignupClick}>Sign Up</button>
+                    </div>
                 </form>
             </div>
         </div>

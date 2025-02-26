@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './MedicineDuration.css';
 import useAuth from '../../useAuth';
 
@@ -40,7 +40,8 @@ const MedicineDuration = () => {
         return () => clearInterval(intervalId);
     }, [currentDate]);
 
-    const fetchReports = async () => {
+    // Wrap fetchReports in useCallback
+    const fetchReports = useCallback(async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/medicine-duration?user_id=${userId}`, {
                 method: 'GET',
@@ -54,13 +55,11 @@ const MedicineDuration = () => {
                 const data = await response.json();
                 console.log('Raw API response:', data);
                 
-                // Check if data has the expected structure
                 if (!Array.isArray(data)) {
                     console.error('API response is not an array:', data);
                     return;
                 }
                 
-                // Check if each item has an id
                 const hasIds = data.every(item => item.id !== undefined);
                 if (!hasIds) {
                     console.error('Some items are missing IDs:', data);
@@ -69,9 +68,6 @@ const MedicineDuration = () => {
                 const currentDate = new Date().toISOString().split('T')[0];
                 const active = data.filter(report => report.dosage >= currentDate);
                 const expired = data.filter(report => report.dosage < currentDate);
-                
-                console.log('Active reports:', active);
-                console.log('Expired reports:', expired);
                 
                 setActiveReports(active);
                 setExpiredReports(expired);
@@ -84,7 +80,7 @@ const MedicineDuration = () => {
         } catch (error) {
             console.error('Failed to fetch medical reports:', error);
         }
-    };
+    }, [userId, token, API_BASE_URL]); // Add dependencies here
 
     useEffect(() => {
         if (userId && token) {
@@ -92,11 +88,19 @@ const MedicineDuration = () => {
         } else {
             console.error('Missing userId or token');
         }
-    }, [userId, API_BASE_URL, token, refreshTrigger]);
+    }, [userId, API_BASE_URL, token, refreshTrigger, fetchReports]); // Add fetchReports to dependency array
 
-    const formatDate = (dateString) => {
-        const options = { day: '2-digit', month: 'short', year: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-GB', options).replace(/ /g, ' - ');
+    const formatDate = (date) => {
+        // Ensure we're working with a Date object
+        const dateObj = date instanceof Date ? date : new Date(date);
+        
+        const options = { 
+            day: '2-digit', 
+            month: 'short', 
+            year: 'numeric',
+            timeZone: 'Asia/Kolkata' // Explicitly use IST timezone
+        };
+        return dateObj.toLocaleDateString('en-GB', options).replace(/ /g, ' - ');
     };
 
     const formatFrequency = (report) => {
@@ -292,57 +296,38 @@ const MedicineDuration = () => {
             return 'Completed';
         }
         
-        // If the medication hasn't started yet, the first dose is on the start date
+        // If the medication hasn't started yet, return the start date
         if (startDate > today) {
-            return formatDate(report.dosage);
+            return formatDate(startDate);
         }
         
         if (report.frequencyType === 'daily') {
-            // For daily medication, the next dose is today if we haven't passed the end date
-            return formatDate(today.toISOString().split('T')[0]);
+            return formatDate(today);
         } else if (report.frequencyType === 'weekly' && report.weeklyDay) {
-            // For weekly medication, find the next occurrence of the specified day
-            const dayMapping = {
-                'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4,
-                'friday': 5, 'saturday': 6, 'sunday': 0
-            };
+            // Create a new date object for current week's date
+            const currentWeekDate = new Date(startDate.getTime());
             
-            const targetDay = dayMapping[report.weeklyDay.toLowerCase()];
-            if (targetDay === undefined) return 'Invalid day';
-            
-            // First, check if the start date is in the future
-            if (startDate > today) {
-                // If the start date is already on the correct day of the week, use it
-                if (startDate.getDay() === targetDay) {
-                    return formatDate(report.dosage);
-                }
-                
-                // Otherwise, find the first occurrence of the target day after the start date
-                const nextDate = new Date(startDate);
-                const daysUntilNext = (targetDay + 7 - startDate.getDay()) % 7;
-                nextDate.setDate(startDate.getDate() + daysUntilNext);
-                
-                return formatDate(nextDate.toISOString().split('T')[0]);
+            // Find the current week's date by adding weeks until we reach or exceed today
+            while (currentWeekDate < today) {
+                currentWeekDate.setDate(currentWeekDate.getDate() + 7);
             }
             
-            // If we're already past the start date, find the next occurrence from today
-            const nextDate = new Date(today);
-            const daysUntilNext = (targetDay + 7 - today.getDay()) % 7;
-            
-            // If today is the day and it's not already passed, use today
-            if (daysUntilNext === 0) {
-                return formatDate(today.toISOString().split('T')[0]);
+            // If we've gone past today, go back one week to get current week's date
+            if (currentWeekDate > today) {
+                currentWeekDate.setDate(currentWeekDate.getDate() - 7);
             }
             
-            // Otherwise, calculate the next occurrence
-            nextDate.setDate(today.getDate() + daysUntilNext);
+            // If today is past the current week's date, show next week
+            if (today > currentWeekDate) {
+                currentWeekDate.setDate(currentWeekDate.getDate() + 7);
+            }
             
-            // Check if the next date is after the end date
-            if (nextDate > endDate) {
+            // If next date is after end date, return completed
+            if (currentWeekDate > endDate) {
                 return 'Completed';
             }
             
-            return formatDate(nextDate.toISOString().split('T')[0]);
+            return formatDate(currentWeekDate);
         } else if (report.frequencyType === 'custom') {
             return 'Custom schedule';
         }

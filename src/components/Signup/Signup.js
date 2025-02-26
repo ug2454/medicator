@@ -13,8 +13,6 @@ function Signup() {
         confirmPassword: ''
     });
 
-
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -23,7 +21,7 @@ function Signup() {
         }));
     };
 
-    const handleLogin = () => {
+    const handleBack = () => {
         navigate('/login');
     };
 
@@ -60,20 +58,27 @@ function Signup() {
     };
 
     return (
-        <div className="header-container">
-            <header className="header">
-                <h1 className="header-text">Medicator</h1>
-            </header>
+        <div className="signup-page-container">
+            <div className="signup-header-container">
+                <header className="signup-header">
+                    <h1 className="signup-header-text">Medicator</h1>
+                </header>
+            </div>
 
-            <div className="signup-container">
-                <h2>Signup</h2>
-                <form onSubmit={handleSubmit}>
+            <div className="signup-form-container">
+                <button className="back-button" onClick={handleBack}>
+                    ←
+                </button>
+                <h2>Create Account</h2>
+                <form onSubmit={handleSubmit} className="signup-form">
                     <div className="form-group">
                         <label htmlFor="username">Username:</label>
                         <input
                             type="text"
                             id="username"
                             name="username"
+                            className="form-input"
+                            placeholder="Enter Username"
                             value={formData.username}
                             onChange={handleChange}
                             required
@@ -85,6 +90,8 @@ function Signup() {
                             type="email"
                             id="email"
                             name="email"
+                            className="form-input"
+                            placeholder="Enter Email"
                             value={formData.email}
                             onChange={handleChange}
                             required
@@ -96,6 +103,8 @@ function Signup() {
                             type="password"
                             id="password"
                             name="password"
+                            className="form-input"
+                            placeholder="Enter Password"
                             value={formData.password}
                             onChange={handleChange}
                             required
@@ -107,15 +116,16 @@ function Signup() {
                             type="password"
                             id="confirmPassword"
                             name="confirmPassword"
+                            className="form-input"
+                            placeholder="Confirm Password"
                             value={formData.confirmPassword}
                             onChange={handleChange}
                             required
                         />
                     </div>
-                    <button className='submit' type="submit">Signup</button>
-                    <br />
-                    <button className='loginButton' type="submit" onClick={handleLogin}>Login</button>
-
+                    <div className="button-container">
+                        <button className="loginButton" type="submit">Sign Up</button>
+                    </div>
                 </form>
             </div>
         </div>
