@@ -5,8 +5,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -14,7 +16,9 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/otiai10/gosseract/v2"
 	"github.com/robfig/cron/v3"
+	openai "github.com/sashabaranov/go-openai"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"golang.org/x/crypto/bcrypt"
@@ -29,6 +33,19 @@ type Claims struct {
 }
 
 var db *sql.DB
+
+// Add these structs for our response
+type Medicine struct {
+	Name      string `json:"name"`
+	Dosage    string `json:"dosage"`
+	Frequency string `json:"frequency"`
+	Duration  string `json:"duration"`
+}
+
+type ProcessedNote struct {
+	Medicines []Medicine `json:"medicines"`
+	Notes     string     `json:"notes"`
+}
 
 func main() {
 	var err error
@@ -102,6 +119,7 @@ func main() {
 	// Apply the JWT middleware
 	http.Handle("/api/", jwtMiddleware(protected))
 	http.HandleFunc("/", serveReactApp)
+	protected.HandleFunc("/api/process-note", handleProcessNote)
 
 	port := "8080"
 	log.Println("Server started at http://localhost:8080")
@@ -376,8 +394,21 @@ func handleMedicineDuration(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Make sure to include all the necessary fields in the query
-		rows, err := db.Query("SELECT id, medicine_name, dosage, follow_up_date, end_date, frequency_type, weekly_day, duration_value, duration_unit FROM medical_reports WHERE user_id = ?", userID)
+		// Updated query to get data directly from medical_reports table
+		rows, err := db.Query(`
+			SELECT 
+				id, 
+				medicine_name, 
+				dosage, 
+				follow_up_date, 
+				end_date, 
+				frequency_type, 
+				weekly_day, 
+				duration_value, 
+				duration_unit, 
+				doctor_notes 
+			FROM medical_reports 
+			WHERE user_id = ?`, userID)
 		if err != nil {
 			http.Error(w, "Failed to fetch medical reports", http.StatusInternalServerError)
 			return
@@ -394,6 +425,7 @@ func handleMedicineDuration(w http.ResponseWriter, r *http.Request) {
 			WeeklyDay     string `json:"weeklyDay"`
 			DurationValue int    `json:"durationValue"`
 			DurationUnit  string `json:"durationUnit"`
+			DoctorNotes   string `json:"doctorNotes"`
 		}
 
 		for rows.Next() {
@@ -407,9 +439,21 @@ func handleMedicineDuration(w http.ResponseWriter, r *http.Request) {
 				WeeklyDay     string `json:"weeklyDay"`
 				DurationValue int    `json:"durationValue"`
 				DurationUnit  string `json:"durationUnit"`
+				DoctorNotes   string `json:"doctorNotes"`
 			}
-			// Make sure to scan all fields
-			if err := rows.Scan(&report.ID, &report.MedicineName, &report.Dosage, &report.FollowUpDate, &report.EndDate, &report.FrequencyType, &report.WeeklyDay, &report.DurationValue, &report.DurationUnit); err != nil {
+			// Make sure to scan all fields including doctor_notes
+			if err := rows.Scan(
+				&report.ID,
+				&report.MedicineName,
+				&report.Dosage,
+				&report.FollowUpDate,
+				&report.EndDate,
+				&report.FrequencyType,
+				&report.WeeklyDay,
+				&report.DurationValue,
+				&report.DurationUnit,
+				&report.DoctorNotes,
+			); err != nil {
 				http.Error(w, "Failed to scan medical report", http.StatusInternalServerError)
 				return
 			}
@@ -789,4 +833,136 @@ func sendDosageReminderEmail(to, medicineName, username, dosageDate string) {
 	} else {
 		log.Printf("Dosage reminder email sent to %s with status code %d", to, response.StatusCode)
 	}
+}
+
+func handleProcessNote(w http.ResponseWriter, r *http.Request) {
+	// Enable CORS
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Parse the multipart form
+	err := r.ParseMultipartForm(10 << 20) // 10 MB max
+	if err != nil {
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		return
+	}
+
+	// Get the file from the request
+	file, handler, err := r.FormFile("note")
+	if err != nil {
+		http.Error(w, "Failed to get file", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	// Create a temporary file
+	tempFile, err := os.CreateTemp("", "upload-*."+filepath.Ext(handler.Filename))
+	if err != nil {
+		http.Error(w, "Failed to create temp file", http.StatusInternalServerError)
+		return
+	}
+	defer os.Remove(tempFile.Name())
+	defer tempFile.Close()
+
+	// Copy the uploaded file to the temporary file
+	_, err = io.Copy(tempFile, file)
+	if err != nil {
+		http.Error(w, "Failed to save file", http.StatusInternalServerError)
+		return
+	}
+
+	// Perform OCR
+	extractedText, err := performOCR(tempFile.Name())
+	if err != nil {
+		http.Error(w, "Failed to perform OCR", http.StatusInternalServerError)
+		return
+	}
+
+	// Process with GPT
+	processedData, err := processWithGPT(extractedText)
+	if err != nil {
+		http.Error(w, "Failed to process with GPT", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(processedData)
+}
+
+func performOCR(filepath string) (string, error) {
+	client := gosseract.NewClient()
+	if client == nil {
+		return "", fmt.Errorf("failed to initialize tesseract client")
+	}
+	defer client.Close()
+
+	err := client.SetImage(filepath)
+	if err != nil {
+		return "", fmt.Errorf("failed to set image: %v", err)
+	}
+
+	text, err := client.Text()
+	if err != nil {
+		return "", fmt.Errorf("failed to extract text: %v", err)
+	}
+
+	return text, nil
+}
+
+func processWithGPT(text string) (*ProcessedNote, error) {
+	client := openai.NewClient(os.Getenv("OPENAI_API_KEY"))
+
+	prompt := fmt.Sprintf(`
+	Extract medicine information and doctor's notes from the following text:
+	%s
+
+	Please format your response as JSON with the following structure:
+	{
+		"medicines": [
+			{
+				"name": "medicine name",
+				"dosage": "dosage information",
+				"frequency": "frequency of intake",
+				"duration": "duration of treatment"
+			}
+		],
+		"notes": "general doctor's notes"
+	}
+	`, text)
+
+	resp, err := client.CreateChatCompletion(
+		context.Background(),
+		openai.ChatCompletionRequest{
+			Model: openai.GPT4,
+			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleUser,
+					Content: prompt,
+				},
+			},
+		},
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to process with GPT: %v", err)
+	}
+
+	var processedNote ProcessedNote
+	err = json.Unmarshal([]byte(resp.Choices[0].Message.Content), &processedNote)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse GPT response: %v", err)
+	}
+
+	return &processedNote, nil
 }
