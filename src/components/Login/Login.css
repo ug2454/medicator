@@ -9,6 +9,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: auto !important;
+  height: auto;
 }
 
 .main-container {

@@ -11,8 +11,8 @@ body {
   align-items: center;
   justify-content: flex-start;
   min-height: 100vh;
-  height: 100vh;
-  overflow: hidden;
+  overflow: auto !important;
+  height: auto;
 }
 
 .signup-page-container {
