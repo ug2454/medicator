@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import './Layout.css';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -51,17 +51,17 @@ function Layout() {
     };
   }, [dropdownRef]);
 
-
   return (
     <div className="layout">
       <header className="navbar">
         <div className="logo">Medicator</div>
         <nav className={`menu ${isMenuOpen ? "open" : ""}`}>
           <ul>
-            <li><a href="/add-medical-report">Add Medical Report</a></li>
-            <li><a href="/medicine-duration">Medicine Duration</a></li>
-            <li><a href="/log-bp">Log B.P</a></li>
-            <li><a href="/bp-chart">B.P Chart</a></li>
+            <li><Link to="/add-medical-report">Add Medical Report</Link></li>
+            <li><Link to="/medicine-duration">Medicine Duration</Link></li>
+            <li><Link to="/log-bp">Log B.P</Link></li>
+            <li><Link to="/bp-chart">B.P Chart</Link></li>
+            <li><Link to="/upload-note">Upload Note</Link></li>
             <li className="user-dropdown" ref={dropdownRef}>
               <div onClick={toggleDropdown} className="dropdown-toggle">
                 <FontAwesomeIcon icon={faUser} size="lg" />

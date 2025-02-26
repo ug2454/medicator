@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './MedicineDuration.css';
 import useAuth from '../../useAuth';
+import NotesModal from '../Modal/NotesModal';
+import { format } from 'date-fns';
 
 const MedicineDuration = () => {
     // Call useAuth at the top level of your component
@@ -15,6 +17,11 @@ const MedicineDuration = () => {
     const [refreshTrigger, setRefreshTrigger] = useState(0);
     // Add state to track the current date
     const [currentDate, setCurrentDate] = useState(new Date().toDateString());
+    // Add state for modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedNotes, setSelectedNotes] = useState('');
+    const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+    const [selectedMedicine, setSelectedMedicine] = useState('');
     
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
@@ -54,6 +61,7 @@ const MedicineDuration = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Raw API response:', data);
+                console.log('Doctor Notes in response:', data.map(item => item.doctorNotes));
                 
                 if (!Array.isArray(data)) {
                     console.error('API response is not an array:', data);
@@ -68,6 +76,11 @@ const MedicineDuration = () => {
                 const currentDate = new Date().toISOString().split('T')[0];
                 const active = data.filter(report => report.dosage >= currentDate);
                 const expired = data.filter(report => report.dosage < currentDate);
+                
+                console.log('Active reports with notes:', active.map(report => ({
+                    medicineName: report.medicineName,
+                    doctorNotes: report.doctorNotes
+                })));
                 
                 setActiveReports(active);
                 setExpiredReports(expired);
@@ -335,6 +348,12 @@ const MedicineDuration = () => {
         return 'Not available';
     };
 
+    const handleViewNotes = (notes, medicineName) => {
+        setSelectedNotes(notes);
+        setSelectedMedicine(medicineName);
+        setIsNotesModalOpen(true);
+    };
+
     return (
         <div className="medicine-duration">
             <div className="header">
@@ -372,6 +391,7 @@ const MedicineDuration = () => {
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Frequency</th>
+                                <th>Notes</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -392,6 +412,15 @@ const MedicineDuration = () => {
                                         <td>{formatDate(report.dosage)}</td>
                                         <td>{formatDate(report.end_date)}</td>
                                         <td>{formatFrequency(report)}</td>
+                                        <td>
+                                            <button 
+                                                className="view-notes-btn"
+                                                onClick={() => handleViewNotes(report.doctorNotes, report.medicineName)}
+                                                disabled={!report.doctorNotes}
+                                            >
+                                                {report.doctorNotes ? 'View Notes' : 'No Notes'}
+                                            </button>
+                                        </td>
                                         <td>
                                             <button 
                                                 className="delete-btn" 
@@ -444,6 +473,7 @@ const MedicineDuration = () => {
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Frequency</th>
+                                <th>Notes</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -464,6 +494,15 @@ const MedicineDuration = () => {
                                         <td>{formatDate(report.dosage)}</td>
                                         <td>{formatDate(report.end_date)}</td>
                                         <td>{formatFrequency(report)}</td>
+                                        <td>
+                                            <button 
+                                                className="view-notes-btn"
+                                                onClick={() => handleViewNotes(report.doctorNotes, report.medicineName)}
+                                                disabled={!report.doctorNotes}
+                                            >
+                                                {report.doctorNotes ? 'View Notes' : 'No Notes'}
+                                            </button>
+                                        </td>
                                         <td>
                                             <button 
                                                 className="delete-btn" 
@@ -487,6 +526,12 @@ const MedicineDuration = () => {
             <footer className="footer">
                 <p>&copy; 2025 Medicator. All rights reserved.</p>
             </footer>
+            <NotesModal 
+                isOpen={isNotesModalOpen}
+                onClose={() => setIsNotesModalOpen(false)}
+                notes={selectedNotes}
+                medicineName={selectedMedicine}
+            />
         </div>
     );
 };
